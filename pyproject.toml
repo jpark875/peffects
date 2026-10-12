@@ -1,0 +1,55 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "peffects"
+version = "0.1.0"
+description = "Modern difference-in-differences from scratch: TWFE, Goodman-Bacon, Callaway-Sant'Anna, Sun-Abraham, synthetic control and finite-cluster inference."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Jason Park" }]
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "scipy>=1.11",
+    "pyreadr>=0.5",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.5", "mypy>=1.10", "pandas-stubs"]
+# Independent implementations used only to cross-check results in the tests.
+crosscheck = ["pyfixest>=0.30"]
+
+[project.scripts]
+peffects = "peffects.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/peffects"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"
+markers = ["data: needs the replication datasets (run `peffects fetch` first)"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RET", "NPY"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/peffects/render.py" = ["E501"]
+
+[tool.mypy]
+strict = true
+python_version = "3.11"
+mypy_path = "src"
+
+[[tool.mypy.overrides]]
+module = ["scipy.*", "pyreadr.*"]
+ignore_missing_imports = true
