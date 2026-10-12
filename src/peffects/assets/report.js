@@ -43,7 +43,6 @@
     });
   }
 
-  // Discrete marks: each hit target carries its own tooltip lines.
   document.querySelectorAll("[data-tip]").forEach(function (el) {
     el.addEventListener("pointerenter", function (e) {
       fill(JSON.parse(el.getAttribute("data-tip")));
@@ -54,7 +53,7 @@
     el.addEventListener("pointerleave", function () { clear(el.ownerSVGElement); });
   });
 
-  // Dense series: one overlay, nearest point by x. Points are [x, y, line1, line2...].
+  // Points are [x, y, ...tooltip lines], nearest by x.
   document.querySelectorAll("[data-points]").forEach(function (el) {
     var svg = el.ownerSVGElement, points = JSON.parse(el.getAttribute("data-points"));
     el.addEventListener("pointermove", function (e) {

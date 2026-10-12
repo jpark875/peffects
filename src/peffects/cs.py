@@ -1,14 +1,4 @@
-"""Callaway and Sant'Anna (2021): group-time average treatment effects and their summaries.
-
-Each ATT(g, t) compares cohort g's outcome change from a base period to t against the same
-change among units not (yet) treated, so no already-treated unit is ever used as a control.
-Inference follows the paper: every estimate carries an influence function, standard errors
-come from it, and a multiplier bootstrap of the same functions gives uniform bands.
-
-With covariates, the comparison is outcome regression (Heckman, Ichimura and Todd, 1997):
-the control group's change is predicted from base-period covariates. Without them it is the
-plain difference in mean changes.
-"""
+"""Callaway and Sant'Anna (2021): group-time average treatment effects and their summaries."""
 
 from __future__ import annotations
 
@@ -89,8 +79,9 @@ def _uniform_crit(
     reps: int,
     seed: int,
 ) -> float:
-    """Critical value for simultaneous bands: the (1 - alpha) quantile of the largest
-    standardized bootstrap deviation across estimates (Mammen multiplier weights)."""
+    """Critical value for simultaneous bands: the (1 - alpha) quantile of the largest standardized
+    bootstrap deviation across estimates (Mammen multiplier weights).
+    """
     pointwise = float(stats.norm.ppf(1 - alpha / 2))
     ok = np.isfinite(se)
     if reps <= 0 or ok.sum() <= 1:
@@ -120,8 +111,9 @@ def _cell(
     control: NDArray[np.bool_],
     w: FloatArray,
 ) -> tuple[float, FloatArray]:
-    """Outcome-regression DiD on the units in ``treat | control``; returns the ATT and an
-    influence function over all units (zero outside the comparison)."""
+    """Outcome-regression DiD on the units in ``treat | control``; returns the ATT and an influence
+    function over all units (zero outside the comparison).
+    """
     n = len(dy)
     sub = treat | control
     n1 = int(sub.sum())
@@ -162,14 +154,7 @@ def att_gt(
     reps: int = 1000,
     seed: int = 0,
 ) -> GroupTime:
-    """Estimate ATT(g, t) for every cohort g and period t (except the base period).
-
-    ``base="varying"`` uses period g-1 for post-treatment cells and t-1 for pre-treatment
-    cells (short differences, as the reference implementation does by default);
-    ``"universal"`` uses g-1 throughout, so pre-period cells read like an event study.
-    Units observed in some periods only are dropped. Cohorts treated in the first period have
-    no pre-period and are dropped too.
-    """
+    """Estimate ATT(g, t) for every cohort g and period t (except the base period)."""
     if control not in ("never", "notyet"):
         raise ValueError("control must be 'never' or 'notyet'")
     if base not in ("varying", "universal"):
@@ -255,7 +240,8 @@ def _weighted(
     gt: GroupTime, cells: NDArray[np.bool_], share: FloatArray
 ) -> tuple[float, FloatArray]:
     """Share-weighted average of the chosen cells, with the influence function including the
-    estimation error in the shares themselves."""
+    estimation error in the shares themselves.
+    """
     idx = np.flatnonzero(cells)
     att = gt.table["att"].to_numpy()[idx]
     pg = share[idx]
@@ -274,13 +260,7 @@ def _weighted(
 def aggregate(
     gt: GroupTime, kind: Kind = "simple", *, reps: int = 1000, seed: int = 0
 ) -> Aggregate:
-    """Summarize ATT(g, t) as one number and, except for ``simple``, a profile.
-
-    - ``simple``: every post-treatment cell, weighted by cohort size.
-    - ``dynamic``: by periods since adoption (an event study), overall = mean of e >= 0.
-    - ``group``: by cohort, averaging its post-treatment periods; overall weights by size.
-    - ``calendar``: by period, across cohorts already treated; overall = mean over periods.
-    """
+    """Summarize ATT(g, t) as one number and, except for ``simple``, a profile."""
     table = gt.table
     share = gt.group_share()
     post = table["post"].to_numpy(bool)

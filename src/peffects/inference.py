@@ -1,11 +1,4 @@
-"""Inference that stays honest with few treated clusters.
-
-- Wild cluster restricted bootstrap (WCR; Cameron, Gelbach and Miller 2008): bootstrap-t
-  with the null imposed. With twelve or fewer clusters, all 2^G Rademacher sign patterns are
-  enumerated, so the p-value is exact for that design. Confidence intervals invert the test.
-- Randomization inference: reassign adoption dates across units and re-estimate, giving the
-  distribution of the estimate under the sharp null of no effect anywhere.
-"""
+"""Inference that stays honest with few treated clusters."""
 
 from __future__ import annotations
 
@@ -136,11 +129,7 @@ def wild_cluster_bootstrap(
     seed: int = 0,
     interval: bool = True,
 ) -> BootstrapTest:
-    """WCR bootstrap-t for one coefficient of the TWFE regression of ``panel``.
-
-    ``regressors`` are ``treated`` and/or covariate names. Clusters default to units. The
-    symmetric p-value is the share of bootstrap |t| at least the observed |t|.
-    """
+    """WCR bootstrap-t for one coefficient of the TWFE regression of ``panel``."""
     columns, names = [], []
     for name in regressors:
         if name == "treated":
@@ -209,12 +198,7 @@ def randomization_inference(
     reps: int = 999,
     seed: int = 0,
 ) -> PermutationTest:
-    """Shuffle adoption dates across units, keeping how many units adopt when.
-
-    ``statistic`` maps a panel to an estimate (for example the TWFE coefficient or the
-    Callaway-Sant'Anna overall ATT). The two-sided p-value counts the observed estimate as
-    one of the draws.
-    """
+    """Shuffle adoption dates across units, keeping how many units adopt when."""
     rng = np.random.default_rng(seed)
     observed = float(statistic(panel))
     draws = np.empty(reps)

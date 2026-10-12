@@ -1,8 +1,4 @@
-"""A validated panel: one outcome per unit and period, with each unit's adoption date.
-
-Treatment is staggered and absorbing: a unit is untreated before its cohort (the first
-treated period) and treated from then on. Never-treated units have cohort ``inf``.
-"""
+"""A validated panel: one outcome per unit and period, with each unit's adoption date."""
 
 from __future__ import annotations
 
@@ -153,12 +149,7 @@ class Panel:
         weight: str | None = None,
         covariates: Sequence[str] = (),
     ) -> Panel:
-        """Build a panel from long data.
-
-        Give either ``cohort`` (first treated period; 0, NaN or inf mean never treated) or
-        ``treat`` (a 0/1 indicator, which must be absorbing). Units adopting after the last
-        period are recorded as never treated.
-        """
+        """Build a panel from long data."""
         if (cohort is None) == (treat is None):
             raise PanelError("give exactly one of cohort= or treat=")
         columns = [unit, time, outcome, *([cohort] if cohort else []), *([treat] if treat else [])]

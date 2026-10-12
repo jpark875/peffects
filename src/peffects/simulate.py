@@ -30,12 +30,7 @@ def staggered(
     trend_sd: float = 0.0,
     seed: int = 0,
 ) -> pd.DataFrame:
-    """Long panel with columns unit, time, y, y0, cohort (inf = never) and effect.
-
-    ``cohorts`` maps adoption period to the share of units adopting then; the remainder are
-    never treated. Untreated outcomes follow parallel trends: unit effect + period effect +
-    noise, plus an optional unit-specific linear trend that breaks parallel trends.
-    """
+    """Long panel with columns unit, time, y, y0, cohort (inf = never) and effect."""
     effect = effect or constant(1.0)
     rng = np.random.default_rng(seed)
     first, last = periods

@@ -1,5 +1,4 @@
-"""Reproduce published numbers. Each check names its source, the printed value, our value
-and the tolerance implied by the printed precision."""
+"""Reproduce published numbers."""
 
 from __future__ import annotations
 

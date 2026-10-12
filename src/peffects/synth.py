@@ -1,11 +1,4 @@
-"""Synthetic control (Abadie, Diamond and Hainmueller 2010) with placebo inference.
-
-The synthetic unit is a convex combination of donors chosen to match the treated unit on
-pre-treatment predictors. Predictor importance (the diagonal V matrix) is chosen, as in the
-original method, to minimize the pre-treatment fit of the outcome itself. Inference is by
-placebo: refit treating each donor as if it were treated and ask how unusual the real
-post/pre fit ratio is.
-"""
+"""Synthetic control (Abadie, Diamond and Hainmueller 2010) with placebo inference."""
 
 from __future__ import annotations
 
@@ -37,11 +30,7 @@ class Predictor:
 
 
 def simplex_weights(target: FloatArray, donors: FloatArray, v: FloatArray) -> FloatArray:
-    """argmin_w (x1 - X0 w)' diag(v) (x1 - X0 w) subject to w >= 0, sum(w) = 1.
-
-    Solved exactly by non-negative least squares with the adding-up constraint appended as a
-    heavily weighted row, then renormalized.
-    """
+    """argmin_w (x1 - X0 w)' diag(v) (x1 - X0 w) subject to w >= 0, sum(w) = 1."""
     root = np.sqrt(np.maximum(v, 0))
     a = donors * root[:, None]
     b = target * root
@@ -116,7 +105,7 @@ def _fit_weights(
     starts: int,
     seed: int,
 ) -> tuple[FloatArray, FloatArray]:
-    """Weights and V. Predictors are scaled by their standard deviation across units first."""
+    """Weights and V."""
     sd = np.concatenate([x1[:, None], x0], axis=1).std(axis=1, ddof=1)
     sd = np.where(sd > 0, sd, 1.0)
     x1s, x0s = x1 / sd, x0 / sd[:, None]
@@ -174,10 +163,7 @@ def synth(
     starts: int = 6,
     seed: int = 0,
 ) -> SynthFit:
-    """Fit a synthetic control for ``treated``, which adopts in period ``adoption``.
-
-    Without ``predictors``, every pre-treatment outcome is a predictor with equal importance.
-    """
+    """Fit a synthetic control for ``treated``, which adopts in period ``adoption``."""
     units = df[unit].unique()
     if treated not in set(units):
         raise ValueError(f"{treated!r} is not a unit")
@@ -238,14 +224,14 @@ class PlaceboTest:
 
     @property
     def p_value(self) -> float:
-        """Share of units (treated included) whose post/pre RMSPE ratio is at least the
-        treated unit's: the permutation p-value of Abadie et al. (2010)."""
+        """Share of units (treated included) whose post/pre RMSPE ratio is at least the treated
+        unit's: the permutation p-value of Abadie et al.
+        """
         ratios = self.ratios()
         return float(np.mean(ratios >= self.fit.ratio))
 
     def gaps(self, max_pre_ratio: float | None = None) -> pd.DataFrame:
-        """Gap paths (period x unit). ``max_pre_ratio`` drops placebos whose pre-period
-        MSPE exceeds that multiple of the treated unit's, as in the paper's figures."""
+        """Gap paths (period x unit)."""
         base = self.fit.rmspe(False) ** 2
         frame = {self.fit.unit: self.fit.gap}
         for u, f in self.placebos.items():

@@ -1,11 +1,4 @@
-"""Goodman-Bacon (2021): the TWFE coefficient as a weighted average of 2x2 comparisons.
-
-With staggered adoption, the static TWFE estimate averages every pairwise DiD between
-timing groups. Some of those comparisons use already-treated units as controls ("later vs
-earlier"); when effects grow over time, those comparisons are biased and can even flip sign.
-The decomposition shows how much weight they carry. It is exact: the weights sum to one and
-the weighted average reproduces the unweighted TWFE coefficient.
-"""
+"""Goodman-Bacon (2021): the TWFE coefficient as a weighted average of 2x2 comparisons."""
 
 from __future__ import annotations
 
@@ -58,7 +51,7 @@ def _did(
 
 
 def decompose(panel: Panel) -> Decomposition:
-    """Decompose the unweighted static TWFE coefficient. Needs a balanced panel."""
+    """Decompose the unweighted static TWFE coefficient."""
     if not panel.balanced:
         raise ValueError("the decomposition needs a balanced panel")
     wide = panel.wide()

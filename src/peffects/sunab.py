@@ -1,11 +1,4 @@
-"""Sun and Abraham (2021): the interaction-weighted event study.
-
-A dynamic TWFE regression with one dummy per period since adoption mixes cohorts, and the
-coefficient for one period can be contaminated by effects from others. Sun and Abraham
-saturate the regression in cohort x relative period, so each coefficient CATT(g, e) uses a
-clean control (never-treated units, or the last cohort before it adopts), then average
-across cohorts with weights equal to each cohort's share of the units observed at e.
-"""
+"""Sun and Abraham (2021): the interaction-weighted event study."""
 
 from __future__ import annotations
 

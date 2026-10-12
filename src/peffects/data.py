@@ -158,8 +158,7 @@ def smoking_frame(data_dir: Path) -> pd.DataFrame:
 
 
 def castle(data_dir: Path, outcome: str = "l_homicide") -> Panel:
-    """State-year panel 2000-2010. Treatment starts in the first full year a castle-doctrine
-    (stand-your-ground) law was in force; weights are state population."""
+    """State-year panel 2000-2010."""
     return Panel.from_frame(
         castle_frame(data_dir),
         unit="state",

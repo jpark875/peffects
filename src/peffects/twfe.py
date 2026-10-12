@@ -1,9 +1,4 @@
-"""Two-way fixed effects: the static DiD regression and the dynamic event-study version.
-
-Both are included as the benchmark the newer estimators are measured against. Under
-staggered adoption with effects that change over time, the static coefficient is a weighted
-average of comparisons that can include negative weights (see ``bacon``).
-"""
+"""Two-way fixed effects: the static DiD regression and the dynamic event-study version."""
 
 from __future__ import annotations
 
@@ -28,7 +23,8 @@ def twfe(
     panel: Panel, *, cluster: str = "unit", weighted: bool = True, covariates: bool = False
 ) -> Fit:
     """Regress the outcome on the treatment dummy plus unit and period fixed effects, and the
-    panel's time-varying covariates if ``covariates``."""
+    panel's time-varying covariates if ``covariates``.
+    """
     d = panel.treated.astype(np.float64)
     if np.min(d) == np.max(d):
         raise ValueError("treatment does not vary in this panel")
@@ -68,12 +64,7 @@ def event_study(
     weighted: bool = True,
     covariates: bool = False,
 ) -> EventStudy:
-    """Dynamic TWFE with one dummy per period relative to adoption.
-
-    Relative periods beyond ``leads``/``lags`` are binned into the endpoints. Without a
-    never-treated group the most distant lead is also dropped, since otherwise the relative
-    time dummies, unit effects and period effects are collinear.
-    """
+    """Dynamic TWFE with one dummy per period relative to adoption."""
     rel = panel.time - panel.unit_cohort
     ever = np.isfinite(rel)
     if not ever.any():

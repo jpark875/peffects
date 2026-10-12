@@ -22,11 +22,7 @@ def demean(
     tol: float = 1e-12,
     max_iter: int = 10_000,
 ) -> FloatArray:
-    """Sweep out every set of group means (alternating projections).
-
-    One sweep is exact for a single factor or a balanced unweighted two-way panel; other
-    designs iterate until the largest change falls below ``tol``.
-    """
+    """Sweep out every set of group means (alternating projections)."""
     out = np.array(values, dtype=np.float64, copy=True)
     flat = out.ndim == 1
     if flat:
@@ -122,11 +118,7 @@ def regress(
     cluster: IntArray | None = None,
     nested: Sequence[bool] | None = None,
 ) -> Fit:
-    """OLS of ``y`` on ``x`` after absorbing the fixed effects in ``absorb``.
-
-    ``nested`` marks which absorbed factors are nested within the clusters; those levels are
-    not counted in K for the small-sample correction (the reghdfe and fixest convention).
-    """
+    """OLS of ``y`` on ``x`` after absorbing the fixed effects in ``absorb``."""
     x = np.asarray(x, dtype=np.float64)
     if x.ndim == 1:
         x = x[:, None]

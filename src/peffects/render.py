@@ -148,9 +148,6 @@ def axis_titles(
     )
 
 
-# Charts -------------------------------------------------------------------------------
-
-
 def event_study_chart(series: dict[str, list[dict[str, Any]]], window: tuple[int, int]) -> str:
     lo_e, hi_e = window
     left, right, top, bottom, plot_w, plot_h = 60, 20, 16, 48, 580, 280
@@ -384,9 +381,6 @@ def placebo_chart(
     )
     parts.append("</svg>")
     return "".join(parts)
-
-
-# Page ---------------------------------------------------------------------------------
 
 
 def stat(label: str, value: str, note: str) -> str:
