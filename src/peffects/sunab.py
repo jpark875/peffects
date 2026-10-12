@@ -43,7 +43,7 @@ def sun_abraham(
     if panel.never_treated.any():
         control = "never treated"
     else:
-        last = float(panel.cohorts.max())
+        last = float(np.max(panel.cohorts))
         panel = panel.keep_times(panel.times < last)
         panel = panel.with_cohorts(np.where(panel.cohort == last, np.inf, panel.cohort))
         control = f"last cohort ({last:g}) before it adopts"

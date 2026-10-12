@@ -30,7 +30,7 @@ def twfe(
     """Regress the outcome on the treatment dummy plus unit and period fixed effects, and the
     panel's time-varying covariates if ``covariates``."""
     d = panel.treated.astype(np.float64)
-    if d.min() == d.max():
+    if np.min(d) == np.max(d):
         raise ValueError("treatment does not vary in this panel")
     codes, nested = _cluster(panel, cluster)
     x = panel.x if covariates else panel.x[:, :0]

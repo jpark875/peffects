@@ -41,10 +41,10 @@ class BootstrapTest:
 
 def _draws(g: int, reps: int, kind: Weights, rng: np.random.Generator) -> tuple[FloatArray, bool]:
     if kind == "rademacher" and 2**g <= max(reps, 1) * 4 and g <= 12:
-        signs = np.array(list(itertools.product([-1.0, 1.0], repeat=g)))
+        signs = np.array(list(itertools.product([-1.0, 1.0], repeat=g)), dtype=np.float64)
         return signs, True
     if kind == "rademacher":
-        return rng.choice([-1.0, 1.0], size=(reps, g)), False
+        return rng.choice(np.array([-1.0, 1.0]), size=(reps, g)).astype(np.float64), False
     if kind == "webb":
         return rng.choice(WEBB, size=(reps, g)), False
     if kind == "mammen":
@@ -69,7 +69,7 @@ class _Design:
     ) -> None:
         self.y, self.x, self.j, self.w, self.absorb = y, x, j, w, list(absorb)
         _, self.codes = np.unique(clusters, return_inverse=True)
-        self.g = int(self.codes.max()) + 1
+        self.g = int(np.max(self.codes)) + 1
         n = len(y)
         self.factor = self.g / (self.g - 1) * (n - 1) / (n - k_total)
         xw = x * w[:, None]

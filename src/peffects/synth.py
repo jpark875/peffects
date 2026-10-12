@@ -45,7 +45,7 @@ def simplex_weights(target: FloatArray, donors: FloatArray, v: FloatArray) -> Fl
     root = np.sqrt(np.maximum(v, 0))
     a = donors * root[:, None]
     b = target * root
-    scale = max(float(np.abs(a).max()), 1.0) * 1e4
+    scale = max(float(np.max(np.abs(a))), 1.0) * 1e4
     a_aug = np.vstack([a, np.full((1, donors.shape[1]), scale)])
     b_aug = np.append(b, scale)
     w, _ = optimize.nnls(a_aug, b_aug, maxiter=50 * donors.shape[1])
@@ -126,7 +126,7 @@ def _fit_weights(
         return simplex_weights(x1s, x0s, v)
 
     def loss(theta: FloatArray) -> float:
-        v = np.exp(theta - theta.max())
+        v = np.exp(theta - np.max(theta))
         w = weights_for(v / v.sum())
         return float(np.mean((z1 - z0 @ w) ** 2))
 
@@ -155,7 +155,7 @@ def _fit_weights(
         )
         if result.fun < best_loss:
             best_theta, best_loss = result.x, float(result.fun)
-    v = np.exp(best_theta - best_theta.max())
+    v = np.exp(best_theta - np.max(best_theta))
     v = v / v.sum()
     return weights_for(v), v
 

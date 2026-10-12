@@ -102,7 +102,7 @@ def cluster_vcov(
 ) -> tuple[FloatArray, int]:
     """CR1 sandwich: G/(G-1) * (N-1)/(N-K) small-sample factor, as Stata and fixest use."""
     _, codes = np.unique(clusters, return_inverse=True)
-    g = int(codes.max()) + 1
+    g = int(np.max(codes)) + 1
     scores = x * (weights * resid)[:, None]
     per_cluster = np.zeros((g, x.shape[1]))
     np.add.at(per_cluster, codes, scores)

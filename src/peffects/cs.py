@@ -75,7 +75,7 @@ def _se(influence: FloatArray, clusters: NDArray[np.int64]) -> FloatArray:
     if influence.ndim == 1:
         influence = influence[:, None]
     n = influence.shape[0]
-    summed = np.zeros((int(clusters.max()) + 1, influence.shape[1]))
+    summed = np.zeros((int(np.max(clusters)) + 1, influence.shape[1]))
     np.add.at(summed, clusters, influence)
     se = np.sqrt(np.sum(summed**2, axis=0)) / n
     return np.where(se > np.sqrt(np.finfo(float).eps) * 10, se, np.nan)
@@ -96,7 +96,7 @@ def _uniform_crit(
     if reps <= 0 or ok.sum() <= 1:
         return pointwise
     n = influence.shape[0]
-    g = int(clusters.max()) + 1
+    g = int(np.max(clusters)) + 1
     summed = np.zeros((g, influence.shape[1]))
     np.add.at(summed, clusters, influence)
     rng = np.random.default_rng(seed)
